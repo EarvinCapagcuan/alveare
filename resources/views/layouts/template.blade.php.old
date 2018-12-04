@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<meta http-equiv="UA-X-Compatible" content="IE=Edge">
+	<!-- personalized css -->
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script type="text/javascript" src="js/script.js"></script>
+	<!-- bootstrap css -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<!-- UIkit CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.24/css/uikit.min.css" />
+	<!-- UIkit JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.24/js/uikit.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.24/js/uikit-icons.min.js"></script>
+	<!-- google fonts | Julius sans one & Monda -->
+	<link href="https://fonts.googleapis.com/css?family=Julius+Sans+One|Monda" rel="stylesheet">
+	<title>@yield('title')</title>
+</head>
+<body data-spy="scroll" data-target="#nav">
+	<div class="container-fluid p-0">
+		@include('layouts/header')
+	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-3 mt-0">
+				@include('layouts/sidenav')
+			</div>
+			<div class="col-lg-9 p-0" style="Font-Family: 'Monda', Sans-Serif; Font-Size: 16px;">
+				@yield('content')
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid p-0">
+		@include('layouts/footer')
+	</div>
+</body>
+</html>
