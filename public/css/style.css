@@ -7,3 +7,29 @@ html, body{
 	height: 100%;
 	width: 100%;
 }
+#main-content{
+	Font-Family: 'Monda', Sans-Serif;
+	Font-Size: 16px;
+}
+#sidenav{
+
+}
+#header{
+
+}
+#footer{
+
+}
+
+.alveare-brand{
+	Font-Family: 'Julius Sans One', Sans-Serif;
+	Font-Size: 45px;
+	color: #F2E4C1;
+}
+.alveare-default{
+	Font-Family: 'Julius Sans One', Sans-Serif;
+	color: #F2E4C1;
+}
+.nav-link{
+	color: #F2E4C1;
+}

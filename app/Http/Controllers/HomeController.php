@@ -28,6 +28,9 @@ class HomeController extends Controller
         return view('index');
     }
 
+    public function main(){
+        return view('main');
+    }
     public function student(){
         return view('student-profile');
     }

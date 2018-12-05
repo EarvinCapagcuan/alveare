@@ -34,27 +34,27 @@
 <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
 
-<body data-spy="scroll" data-target="#nav">
-    <div class="container-fluid p-0">
+<body>
+    <div class="container-fluid p-0" id="header">
         @include('layouts/header')
     </div>
     @guest
-    <div class="container-fluid p-0 m-0" style="Font-Family: 'Monda', Sans-Serif; Font-Size: 16px;">
+    <div class="container-fluid p-0 m-0" id="main-content">
         @yield('content')
     </div>
     @else
     <div class="container-fluid p-0 m-0">
         <div class="row m-0 p-0">
-            <div class="col-lg-3">
+            <div class="col-lg-2 bg-light" id="sidenav">
                 @include('layouts/sidenav')
             </div>
-            <div class="col-lg-8 mr-0" style="Font-Family: 'Monda', Sans-Serif; Font-Size: 16px;">
+            <div class="col mr-0" id="main-content">
                 @yield('content')
             </div>
         </div>
     </div>
     @endguest
-    <div class="container-fluid p-0">
+    <div class="container-fluid p-0" id="footer">
         @include('layouts/footer')
     </div>
     <!-- Scripts -->

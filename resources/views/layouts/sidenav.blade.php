@@ -1,41 +1,35 @@
-<div class="sidenav px-2 m-auto">
-	<div class="text-center accordion" id="nav-accordion">
-		@guest
-		<div class="card">
-			<div class="card-header" id="heading-option-1">
-				<h5>
-					<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#option-1">Account</button>
-				</h5>
-			</div>
-		</div>
-		<div>
-			<div id="option-1" class="collapse" data-parent="#nav-accordion">
-				<div class="card-body">
-					<ul class="nav flex-column">
-						<li class="nav-item"><a href="{{ route('login') }}" class="nav-link">login</a></li>
-						<li class="nav-item"><a href="{{ route('register') }}" class="nav-link">Register</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		@else
-		<div>
-			<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#option-2">Accounts</button>
-		</div>
-		<div>
-			<div id="option-2" class="collapse" data-parent="#nav-accordion">
-					<ul class="nav flex-column">
-						@if(Auth::user()->level_id==3)
-						<li class="nav-item"><a href="/manager" class="nav-link">Profile</a></li>
-						@elseif(Auth::user()->level_id==2)
-						<li class="nav-item"><a href="/instructor" class="nav-link">Profile</a></li>
-						@elseif(Auth::user()->level_id==1)
-						<li class="nav-item"><a href="/student" class="nav-link">Profile</a></li>					
-						@endif
-						<li class="nav-item"><a href="{{ route('register') }}" class="nav-link">Register</a></li>
-					</ul>
-			</div>
-		</div>
-		@endguest
-	</div>
+<div class="row p-0 m-0">
+	<nav id="sidebar-nav">
+		@auth
+		@if(Auth::user()->level_id==3)
+		<ul class="uk-nav-default" uk-nav>
+			<li class="uk-active"><h4 class="text-center"><i uk-icon="icon:cog"></i>&nbsp;Dashboard</h4></li>
+			<li class="uk-parent">
+				<a href="#"><i uk-icon="icon:home"></i>&nbsp;Home</a>
+					<ul class="uk-nav-sub">
+					<li><a href="/main">Main</a></li>
+					<li><a href="/manager">Profile</a></li>	
+				</ul>
+			</li>
+			<li class="uk-parent">
+				<a href="#"><i uk-icon="icon:users"></i>&nbsp;Manage Accounts</a>
+				<ul class="uk-nav-sub">
+					<li><a href="/admin/instructor-list">Instructors List</a></li>
+					<li><a href="/admin/student-list">Students List</a></li>
+					<li><a href="{{ route('register') }}">Add User</a></li>
+				</ul>
+			</li>
+			<li class="uk-parent">
+				<a href="#"><i uk-icon="icon:calendar"></i>&nbsp;Check Works</a>
+				<ul class="uk-nav-sub">
+					<li><a href="/admin/All/{{Auth::User()->id}}-{{Auth::User()->level_id}}/projects">Projects</a></li>
+					<li><a href="/admin/All/{{Auth::User()->id}}-{{Auth::User()->level_id}}/announcements">Announcements</a></li>	
+				</ul>
+			</li>
+		</ul>
+		@elseif(Auth::user()->level_id==2)
+		@elseif(Auth::user()->level_id==1)
+		@endif
+	@endguest
+	</nav>
 </div>

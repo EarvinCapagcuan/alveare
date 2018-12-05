@@ -1,4 +1,4 @@
- <?php
+<?php
 
 use App\User;
 use Illuminate\Support\Facades\Input;
@@ -23,6 +23,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+Route::get('/main', 'HomeController@main');
 
 /*user level view*/
 Route::get('/student', 'HomeController@student');
