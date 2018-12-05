@@ -58,7 +58,29 @@ class HomeController extends Controller
         return view('instructor-list', compact('instructors', 'count'));
     }
 
-    public function edit_instructor(Request $id){
-        $instructor = User::findOrFail($id);
+    public function update_account($id, Request $request){
+        $user = User::findOrFail($id);
+
+        $user->firstname = $request->firstname;
+        $user->middlename = $request->middlename;
+        $user->lastname = $request->lastname;
+        $user->email = $request->email;
+        $user->contact = $request->contact;
+
+        if($request->level != 3){
+            $user->batch_id = $request->batch_id;
+            $user->senior_id = $request->handler;
+        }
+
+        if($user->save()){
+            echo "success";
+        }else{
+            echo "error";
+        }
+    }
+
+    public function search($val, Request $request){
+        $result = User::where('firstname', 'LIKE', '%' . $val . '%' )->orWhere('middlename', 'LIKE', '%' . $val . '%' )->orWhere('lastname', 'LIKE', '%' . $val . '%' )->orWhere('email', 'LIKE', '%' . $val . '%' )->get();
+        return $result;
     }
 }

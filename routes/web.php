@@ -1,5 +1,7 @@
  <?php
 
+use App\User;
+use Illuminate\Support\Facades\Input;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,7 +17,7 @@ Route::get('/welcome', function(){
 });
 
 Route::get('/', function () {
-    return view('index');
+    return view('/index');
 });
 
 Auth::routes();
@@ -39,6 +41,7 @@ Route::get('/admin/instructor-list', 'HomeController@instructor_list');
 
 /*edit accounts*/
 Route::post('/admin/edit/instructor/{id}', 'HomeController@edit_instructor');
+Route::patch('/admin/update-profile-{id}', 'HomeController@update_account');
 
 /*create*/
 Route::post('/admin/create-project', 'ProjectController@create');
@@ -61,3 +64,5 @@ Route::get('/batch-{id}/projects-list', 'ProjectController@projectsStudent');
 Route::patch('/approve-project-{id}', 'ProjectController@approveProject');
 
 Route::get('/student-{id}/submit-project-{project}', 'ProjectController@submitProject');
+
+Route::get('/search/{q}', 'HomeController@search');

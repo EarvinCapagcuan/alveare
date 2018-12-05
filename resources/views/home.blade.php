@@ -19,7 +19,7 @@
 </div>
 <div class="row">
     <div class="col-lg-12 py-3">
-        <div>{{ Auth::User()->firstname." ".Auth::User()->middlename." ".Auth::User()->lastname }}</div>
+        <div>{{ Auth::User()->full_name }}</div>
         <div>{{ Auth::User()->email }}</div>
 
     </div>

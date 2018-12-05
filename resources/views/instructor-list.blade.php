@@ -3,12 +3,14 @@
 @section('title', 'Instructors List')
 
 @section('content')
+
 <h4>Instructors List</h4>
 <form class="uk-search uk-search-default w-100">
 	<a href="#" uk-search-icon></a>
-	<input type="search" class="uk-search-input" placeholder="Search..."></input>
+	<input type="search" class="uk-search-input" id="search" placeholder="Search...">
+	<div id="searchdiv"></div>
 </form>
-
+<div >
 <table border="1" class="uk-table uk-table-striped">
 	<thead>
 		<th>Name</th>
@@ -22,7 +24,7 @@
 			<td colspan="5" align="right"><em>*end of record</em></td>
 		</tr>
 	</tfoot>
-	<tbody>
+	<tbody class="result">
 		@foreach($instructors as $instructor)
 		<tr>
 			<td>{{ $instructor->full_name }}</td>
@@ -94,7 +96,7 @@
 									<button class="uk-button" type="button">Cancel</button>
 								</div>
 							</form>
-						</div>
+		 				</div>
 					</div>
 				</div>
 			</div>
@@ -102,20 +104,41 @@
 	</tbody>
 </table>
 
-
 <script type="text/javascript">
-	function editInfo(id){
+$(document).ready(function(){
+	$('#search').on('keyup',function(){
+		$('.result').html("");
+		let value = $('#search').val();
+
 		$.ajax({
-			url : "/admin/edit/instructor/"+id,
-			data : {
-				"_token" : "{{ csrf_token() }}",
-				"id" : "id"
+			url : '/search/'+value,
+			type : 'GET',
+			dataType: 'json',
+			data: {
+				search : value
 			},
-			type : "POST",
 			success : function(data){
-				console.log("edit "+data);
+				for (var x = 0; x < data.length; x++) {
+					$('.result').append('<tr><td>'+data[x].firstname+' '+data[x].middlename+' '+data[x].middlename+'</td><td>'+data[x].email+'</td><td>'+data[x].contact+'</td><td>'+data[x].batch_id+'</td></tr>');
+	        	}
 			}
 		});
-	}
+	});
+});
+
+function editInfo(id){
+	$.ajax({
+		url : "/admin/edit/instructor/"+id,
+		data : {
+			"_token" : "{{ csrf_token() }}",
+			"id" : "id"
+		},
+		type : "POST",
+		success : function(data){
+			console.log(data[1]);
+		}
+	});
+}
+
 </script>
 @endsection

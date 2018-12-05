@@ -1,3 +1,8 @@
+@extends('layouts/app')
+
+@section('title', 'Login')
+
+@section('login')
 <div>
     <div class="container-fluid p-0 uk-background-cover" style="background-image: url(images/univ-bg.jpg);">
         <div class="row">
@@ -59,3 +64,5 @@
             </div>
         </div>
     </div>
+</div>
+@endsection
