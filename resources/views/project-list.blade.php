@@ -13,37 +13,28 @@
 	<span>Show by status</span>
 	<select class="uk-select" name="byStatus" id="byStatus" onChange="byStatus()">
 		<option value="All" selected>All</option>
-		@foreach(App\ProjectStatus::all() as $status)
+		@foreach(App\ProjectStatus::whereIn('id', [1, 2])->get() as $status)
 		<option value="{{ $status->status }}" {{ Session::Has("$status->status") ? "selected" : "" }}>{{ $status->status }}</option>
 		@endforeach
 	</select>
-</div>
-<div class="my-2">
-	<span>Title</span>
-	<button class="uk-button"><i uk-icon="icon:arrow-up"></i></button>
-	<button class="uk-button"><i uk-icon="icon:arrow-down"></i></button>
-	<span>Deadline</span>
-	<button class="uk-button"><i uk-icon="icon:arrow-up"></i></button>
-	<button class="uk-button"><i uk-icon="icon:arrow-down"></i></button>
 </div>
 
 @foreach($projects as $project)
 <div class="m-3" uk-grid>
 	<div class="uk-width-expand" id="project-list">
-		Project Title: <span>{{ $project->project_name }}</span><br>
-		Requirements: <span>{{ $project->project_req }}</span><br>
+		Project Title: <span>{{ ucfirst($project->project_name) }}</span><br>
+		Requirements: <span>{{ ucfirst($project->project_req) }}</span><br>
 		Deadline: <span>{{ $project->deadline }}</span><br>
 		Status: <span>{{ $project->status->status }}</span>
 		@if(Auth::User()->level_id == 3)
-		<br>Instructor: <span>{{ $project->instructor->full_name }}</span>
+		<br>Instructor: <span>{{ ucwords($project->instructor->full_name) }}</span>
 		@endif
 	</div>
 	@if($project->status->id == 1 && Auth::User()->level_id == 2)
-	<div class="uk-button-group uk-flex uk-flex-column uk-width-1-6 border">
-		<a href="#project-modal-{{ $project->id }}" class="uk-button edit-project" uk-toggle><span uk-icon="icon: file-edit"></span></a>
-		<a href="#project-close-{{ $project->id }}" class="uk-button" uk-toggle><span uk-icon="icon: clock"></span></a>
-	</div>
+		<a href="#project-modal-{{ $project->id }}" class="uk-button edit-project" uk-toggle uk-tooltip="title:Edit project"><span uk-icon="icon: file-edit"></span></a>
+		<a href="#project-close-{{ $project->id }}" class="uk-button" uk-toggle uk-tooltip="title:Close project"><span uk-icon="icon: clock"></span></a>
 	@endif
+
 </div>
 <!-- modal for editing -->
 <div class="uk-modal-full" id="project-modal-{{ $project->id }}" uk-modal>
@@ -142,7 +133,9 @@
 	</div>
 </div>
 @endforeach
-
+<ul class="uk-pagination uk-flex-center m-2">
+	{{ $projects->links() }}
+</ul>
 @endsection
 <!-- js to save project edits -->
 <script type="text/javascript">

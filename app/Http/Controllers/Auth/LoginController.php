@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Carbon\Carbon;
 
 class LoginController extends Controller
 {
@@ -26,13 +27,19 @@ class LoginController extends Controller
      * @var string
      */
     public function authenticated($request , $user){
+    $user->update([
+        'last_login_at' => Carbon::now()->toDateTimeString(),
+        'last_login_ip' => $request->getClientIp()
+    ]);
+
     if($user->level_id==3){
-        return redirect('manager');
+        return redirect('main-0');
     }elseif($user->level_id==2){
-        return redirect('instructor');
+        return redirect('main-'.$user->id);
     }elseif($user->level_id==1){
-        return redirect('student');
+        return redirect('main-'.$user->id);
     }
+
 }
 /*    protected $redirectTo = '/home';
 */

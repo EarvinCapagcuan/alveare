@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
-use App\Batch;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+
+use App\User;
+use App\Batch;
+use Carbon\Carbon;
 
 class RegisterController extends Controller
 {
@@ -47,10 +49,6 @@ class RegisterController extends Controller
      * @return \Illuminate\Contracts\Validation\Validator
      */
 
-    public function setDateAttribute($value)
-    {
-       
-    }
 
     protected function validator(array $data)
     {
@@ -60,7 +58,7 @@ class RegisterController extends Controller
             'lastname' => 'required|string|max:255',
             'dob' => 'required|date',
             'level_id' => 'required',
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|unique|string|email|max:255',
             'password' => 'required|string|min:6|confirmed',
         ]);
     }
@@ -81,8 +79,10 @@ class RegisterController extends Controller
             'contact' => $data['contact'],
             'level_id' => $data['level_id'],
             'batch_id' => $data['batch'],
-            'senior' => $data['senior'],
+            'senior_id' => $data['senior'],
             'email' => $data['email'],
+            'last_login_at' => Carbon::now()->toDateTimeString(),
+            'last_login_ip' => null,
             'password' => bcrypt($data['password']),
         ]);
     }

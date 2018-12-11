@@ -5,42 +5,49 @@
 @if((Auth::User()) && (Auth::User()->level_id == 3))
 @section('content')
 <div class="row">
-    <div class="col-lg-6 py-1 px-0 my-auto">
+    <div class="col">
         <h2>Account Information</h2>   
     </div>
-    <div class="col-lg-6 py-1 px-0 my-auto text-right">
-        <h4>Manager</h4>
+        <div class="col-1 text-right">
+        <h4>{{ Auth::User()->level->name }}</h4>
     </div>
 </div>
 <div class="row">
-    <div class="col-lg-12 py-3">
-        <div>{{ Auth::User()->full_name }} <a href="#update-modal" class="uk-button" uk-toggle>Update Infromation</a></div>
-        <div>{{ Auth::User()->email }}</div>
+    <div class="col">
+        <a href="" class="uk-button uk-button-text">Update Infromation</a>
     </div>
 </div>
-<div class="card-deck m-auto">
-    <div class="card">
-        <div class="card-header">
-            <h4>Accounts</h4>
-        </div>
-        <div class="card-body">
-            <ul class="list-group">
-                <li class="list-group-item"><a href="{{ route('register') }}">Add an Instructor</a></li>
-                <li class="list-group-item"><a href="/admin/instructor-list">Check User Info</a></li>
-            </ul>
+<div class="row uk-section">
+    <div class="col">
+        <div class="uk-card uk-card-small uk-card-default">
+            <div class="uk-card-header">
+                <h4>Welcome, {{ Auth::User()->full_name }}&nbsp;<a href="#update-modal" class="text-right" uk-toggle><i uk-icon="icon: file-edit"></i></a></h4>
+                <span>{{ Auth::User()->level->name }}</span>
+            </div>
+            <div class="uk-card-body">
+                <ul class="uk-list">
+                    <li>Date of birth: {{ Auth::User()->dob->format('d/m/Y') }}</li>
+                    <li>email: {{ Auth::User()->email }}</li>
+                    <li>contact number: {{ Auth::User()->contact }}</li>
+                </ul>
+            </div>
         </div>
     </div>
-    <div class="card"> 
-        <div class="card-header">
-            <h4>Projects<span class="badge bg-light">1</span></h4>
-        </div>
-        <div class="card-body">
-            <ul class="list-group">
-                <li class="list-group-item"><a href="/admin/All/{{ Auth::User()->id }}-{{ Auth::User()->level_id }}/projects">Review Instructor Projects</a></li>
+    <div class="col">
+        <div class="uk-card uk-card-small uk-card-default">
+            <div class="uk-card-header">
+                Last Login Information
+            </div>
+            <div class="uk-card-body">
+               <ul class="uk-list">
+                <li>Last login {{ Auth::User()->last_login_at->diffForHumans() }}</li>
+                <li>IP {{ Auth::User()->last_login_ip }}</li>
             </ul>
+        </div>
         </div>
     </div>
 </div>
+
 <!-- modal to update manager profile -->
 <div id="update-modal" class="uk-modal-full" uk-modal>
     <div class="uk-modal-dialog">
@@ -65,7 +72,7 @@
                     </div>
                     <label for="dob" class="uk-form-label">Date of Birth</label>
                     <div class="uk-form-control">
-                    <input type="text" id="dob" name="dob" class="uk-input" value="{{ Auth::User()->dob }}"></input>
+                    <input type="text" id="dob" name="dob" class="uk-input date" value="{{ Auth::User()->dob->format('d/m/Y') }}"></input>
                     </div>
                     <label for="contact" class="uk-form-label">Contact Information</label>
                     <div class="uk-form-control">
@@ -86,6 +93,7 @@
     </div>
 </div>
 @endsection
+
 @else
 <script type="text/javascript">
     window.location="/unauthorized";
@@ -115,8 +123,22 @@
                 _token : '{{ csrf_token() }}'
             },
             success : function(data){
-                console.log(data);               
+                if(data){
+                    window.location.reload();
+                    sessionStorage.reloadAfterPageLoad = true;
+                }
+            },
+            error : function(data){
+                $.each(data.responseJSON.errors, function(key,value){
+                    UIkit.notification({message : value, status : 'danger'});
+                });
             }
         });
     }
+    $( function () {
+        if ( sessionStorage.reloadAfterPageLoad ) {
+            UIkit.notification({message : 'Success.', status : 'success'});
+            sessionStorage.clear();
+        }
+    });
 </script>

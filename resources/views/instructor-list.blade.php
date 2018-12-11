@@ -4,45 +4,42 @@
 
 @section('content')
 
-<h4>Instructors List</h4>
+<h4>{{ $users }} List</h4>
 <form class="uk-search uk-search-default w-100">
 	<a href="#" uk-search-icon></a>
 	<input type="search" class="uk-search-input" id="search" placeholder="Search...">
 	<div id="searchdiv"></div>
 </form>
 <div >
-<table border="1" class="uk-table uk-table-striped">
-	<thead>
-		<th>Name</th>
-		<th>Email</th>
-		<th>Contact infromation</th>
-		<th>Batch</th>
-		<th>Actions</th>
-	</thead>
-	<tfoot>
-		<tr>
-			<td colspan="5" align="right"><em>*end of record</em></td>
-		</tr>
-	</tfoot>
-	<tbody class="result">
-		@foreach($instructors as $instructor)
-		<tr>
-			<td>{{ $instructor->full_name }}</td>
-			<td>{{ $instructor->email }}</td>
-			<td>{{ $instructor->contact }}</td>
-			<td>{{ $instructor->batch->batch_name}}</td>
-			<td>
-				<a href="#edit-modal" class="uk-button uk-button-primary" uk-toggle>O</a>&nbsp;
-				<!-- <button class="btn m-1" onClick="editInfo({{ $instructor->id }})">O</button> -->
-			 	<a href="/admin/delete/{{ $instructor->id }}">X</a>
-			</td>
+	<table border="1" class="uk-table uk-table-striped">
+		<thead>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Contact infromation</th>
+			<th>Batch</th>
+			<th>Actions</th>
+		</thead>
+		<tfoot>
+			<tr>
+				<td colspan="5" align="right"><em>*end of record</em></td>
+			</tr>
+		</tfoot>
+		<tbody class="result">
+			@foreach($instructors as $instructor)
+			<tr>
+				<td>{{ $instructor->full_name }}</td>
+				<td>{{ $instructor->email }}</td>
+				<td>{{ $instructor->contact }}</td>
+				<td>{{ $instructor->batch->batch_name}}</td>
+				<td>
+					<a href="#edit-modal" class="uk-button uk-button-primary" uk-toggle><i uk-icon="icon:file-edit"></i></a>&nbsp;
+				</td>
 			</tr>
 			<div class="uk-modal-full" id="edit-modal" uk-modal>
 				<div class="uk-modal-dialog">
 					<button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
 					<div class="uk-grid-collapse uk-child-width-1-2@s uk-child-width-1-2@md uk-flex-middle" uk-grid>
 						<div class="uk-background-cover uk-width-1-4@s uk-uk-width-3-4@md" style="background-color: gray;" uk-height-viewport>
-							<h3>Edit Form</h3>
 						</div>
 						<div class="uk-padding-large">
 							<h3>Instructor Information</h3>
@@ -78,13 +75,13 @@
 								<div class="uk-form-control">
 									<select id="batch" class="uk-select" name="batch">
 										@foreach(App\Batch::all() as $batch)
-											<option value="{{ $batch->id }}">{{ $batch->batch_name }}</option>
+										<option value="{{ $batch->id }}">{{ $batch->batch_name }}</option>
 										@endforeach
 									</select>
 								</div>
 								<label for="handler" class="uk-form-label">Handler</label>
 								<div class="uk-form-control">
-								<select id="handler" class="uk-select" name="handler">
+									<select id="handler" class="uk-select" name="handler">
 										@foreach(App\User::whereLevel_id(3)->get() as $manager)
 										<option value="{{ $manager->id }}">{{ $manager->firstname." ".$manager->middlename." ".$manager->lastname }}</option>
 										@endforeach
@@ -96,49 +93,49 @@
 									<button class="uk-button" type="button">Cancel</button>
 								</div>
 							</form>
-		 				</div>
+						</div>
 					</div>
 				</div>
 			</div>
 			@endforeach
-	</tbody>
-</table>
+		</tbody>
+	</table>
 
-<script type="text/javascript">
-$(document).ready(function(){
-	$('#search').on('keyup',function(){
-		$('.result').html("");
-		let value = $('#search').val();
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#search').on('keyup',function(){
+				$('.result').html("");
+				let value = $('#search').val();
 
-		$.ajax({
-			url : '/search/'+value,
-			type : 'GET',
-			dataType: 'json',
-			data: {
-				search : value
-			},
-			success : function(data){
-				for (var x = 0; x < data.length; x++) {
-					$('.result').append('<tr><td>'+data[x].firstname+' '+data[x].middlename+' '+data[x].middlename+'</td><td>'+data[x].email+'</td><td>'+data[x].contact+'</td><td>'+data[x].batch_id+'</td></tr>');
-	        	}
-			}
+				$.ajax({
+					url : '/search/'+value,
+					type : 'GET',
+					dataType: 'json',
+					data: {
+						search : value
+					},
+					success : function(data){
+						for (var x = 0; x < data.length; x++) {
+							$('.result').append('<tr><td>'+data[x].firstname+' '+data[x].middlename+' '+data[x].middlename+'</td><td>'+data[x].email+'</td><td>'+data[x].contact+'</td><td>'+data[x].batch_id+'</td></tr>');
+						}
+					}
+				});
+			});
 		});
-	});
-});
 
-function editInfo(id){
-	$.ajax({
-		url : "/admin/edit/instructor/"+id,
-		data : {
-			"_token" : "{{ csrf_token() }}",
-			"id" : "id"
-		},
-		type : "POST",
-		success : function(data){
-			console.log(data[1]);
+		function editInfo(id){
+			$.ajax({
+				url : "/admin/edit/instructor/"+id,
+				data : {
+					"_token" : "{{ csrf_token() }}",
+					"id" : "id"
+				},
+				type : "POST",
+				success : function(data){
+					console.log(data[1]);
+				}
+			});
 		}
-	});
-}
 
-</script>
-@endsection
+	</script>
+	@endsection

@@ -6,28 +6,40 @@
 html, body{
 	height: 100%;
 	width: 100%;
+	padding-bottom: 80px;
 }
 #main-content{
-	Font-Family: 'Monda', Sans-Serif;
-	Font-Size: 16px;
+	font-family: 'Monda', Sans-Serif;
+	font-size: 16px;
 }
 #sidenav{
-
+	min-height: initial;
 }
 #header{
 
 }
 #footer{
+}
 
+#account-info-section{
+/*color: #F2E4C1; Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#2d736f+87,2d736f+87,d2ebf9+100
+background: rgba(45,115,111,1);
+background: -moz-linear-gradient(45deg, rgba(45,115,111,1) 0%, rgba(106,161,157,0.95) 74%, rgba(144,194,190,0.93) 99%, rgba(144,194,190,0.93) 100%);
+background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(45,115,111,1)), color-stop(74%, rgba(106,161,157,0.95)), color-stop(99%, rgba(144,194,190,0.93)), color-stop(100%, rgba(144,194,190,0.93)));
+background: -webkit-linear-gradient(45deg, rgba(45,115,111,1) 0%, rgba(106,161,157,0.95) 74%, rgba(144,194,190,0.93) 99%, rgba(144,194,190,0.93) 100%);
+background: -o-linear-gradient(45deg, rgba(45,115,111,1) 0%, rgba(106,161,157,0.95) 74%, rgba(144,194,190,0.93) 99%, rgba(144,194,190,0.93) 100%);
+background: -ms-linear-gradient(45deg, rgba(45,115,111,1) 0%, rgba(106,161,157,0.95) 74%, rgba(144,194,190,0.93) 99%, rgba(144,194,190,0.93) 100%);
+background: linear-gradient(45deg, rgba(45,115,111,1) 0%, rgba(106,161,157,0.95) 74%, rgba(144,194,190,0.93) 99%, rgba(144,194,190,0.93) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2d736f', endColorstr='#90c2be', GradientType=1 );*/
 }
 
 .alveare-brand{
-	Font-Family: 'Julius Sans One', Sans-Serif;
-	Font-Size: 45px;
+	font-family: 'Julius Sans One', Sans-Serif;
+	font-size: 45px;
 	color: #F2E4C1;
 }
 .alveare-default{
-	Font-Family: 'Julius Sans One', Sans-Serif;
+	font-family: 'Julius Sans One', Sans-Serif;
 	color: #F2E4C1;
 }
 .nav-link{

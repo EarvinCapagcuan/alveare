@@ -3,67 +3,96 @@
 @section('title', 'Home')
 
 @section('content')
-<div class="container-fluid p-0 uk-background-cover" style="background-image: url(images/univ-bg.jpg);">
-	<div class="row">
-		<div class="col-lg-7 my-3 mx-auto">
-			<div class="uk-card-default" style="background-color: hsla(43, 65%, 89%, 0.74)">
-				<div class="uk-card-header">Login</div>
-				<div class="uk-card-body">
-					<div class="row">
-						<div class="col-lg-4 mx-auto">
-							<img src="images/alveare.png" class="p-2">
-							<div class="text-center">
-								<h2>Alveare</h2>
-							</div>
-						</div>
-						<div class="col-lg-6 m-auto">
-							<form class="uk-form-stacked" method="POST" action="{{ route('login') }}">
-								{{ csrf_field() }}
-
-								<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-									<label for="email" class="uk-form-label">E-Mail Address</label>
-									<input id="email" type="email" class="uk-input" name="email" value="{{ old('email') }}" required autofocus>
-
-									@if ($errors->has('email'))
-									<span class="help-block">
-										<strong>{{ $errors->first('email') }}</strong>
-									</span>
-									@endif
-								</div>
-
-
-								<div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-									<label for="password" class="uk-form-label">Password</label>
-									<input id="password" type="password" class="uk-input" name="password" required>
-
-									@if ($errors->has('password'))
-									<span class="help-block">
-										<strong>{{ $errors->first('password') }}</strong>
-									</span>
-									@endif
-								</div>
-
-								<div class="form-group">
-									<div class="checkbox">
-										<label>
-											<input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} class="uk-checkbox"> Remember Me
-										</label>
-									</div>
-								</div>
-								<div class="form-group">
-									<button type="submit" class="uk-button">
-										Login
-									</button>
-									<a class="uk-button uk-button-text" href="{{ route('password.request') }}">
-										Forgot Your Password?
-									</a>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+@if(Auth::User())
+<div class="row">
+    <div class="col-lg-6 py-1 px-0 my-auto">
+        <h2>Account Information</h2>   
+    </div>
+    <div class="col-lg-6 py-1 px-0 my-auto text-right">
+        @if((Auth::User()->level_id)==3)
+        <h4>Manager</h4>
+        @elseif((Auth::User()->level_id)==2)
+        <h4>Instructor</h4>
+        @else
+        <h4>Student</h4>
+        @endif
+    </div>
 </div>
+<div class="row">
+    <div class="col-lg-12 py-3">
+        <div>{{ Auth::User()->full_name }}</div>
+        <div>{{ Auth::User()->email }}</div>
+
+    </div>
+</div>
+<div class="row">
+    @if((Auth::User()->level_id)==3 || (Auth::User()->level_id)==2 )
+    <div class="card-deck m-auto">
+        <div class="card">
+            <div class="card-header">
+                <h4>Students<span class="badge bg-light">1</span></h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="#">Register a Stundent</a></li>
+                    <li class="list-group-item"><a href="#"><a href="#">Check Student Info</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card"> 
+            <div class="card-header">
+                <h4>Projects<span class="badge bg-light">1</span></h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="#">Start a Project</a></li>
+                    <li class="list-group-item"><a href="#">Check Project list and status</a></li>
+                    <li class="list-group-item"><a href="#">Check Recieved Projects</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h4>Notices<span class="badge bg-light">1</span></h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="#">Create an annoucement</a></li>
+                    <li class="list-group-item"><a href="#">Edit an Announcement</a></li>
+                    <li class="list-group-item"><a href="#">See all announcements</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    @else
+    <div class="card-deck m-auto">
+        <div class="card">
+            <div class="card-header">
+                <h4>Projects</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="#">Submit a Project</a></li>
+                    <li class="list-group-item"><a href="#">Submitted Projects</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h4>Grade</h4>
+            </div>
+            <div class="card-body">
+                <div>criteria</div>
+                <div>100%</div>
+            </div>
+        </div>
+    </div>
+    @endif
+</div>
+@else
+	<script type="text/javascript">
+		window.location = "/login" ;
+	</script>
+@endif
+
 @endsection

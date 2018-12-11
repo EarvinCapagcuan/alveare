@@ -29,10 +29,16 @@ class ProjectController extends Controller
      */
     public function create(Request $request)
     {
+        $this->validate(request(), [
+            'req' => 'required|string',
+            'title' => 'required|string',
+        ]);
+
         $project = new Project;
+
         $project->instructor_id = $request->id;
-        $project->project_req = $request->req;
-        $project->project_name = $request->title;
+        $project->project_req = request('req');
+        $project->project_name = request('title');
         $project->batch_id = $request->batch_id;
         $project->deadline = $request->deadline;
 
@@ -62,65 +68,58 @@ class ProjectController extends Controller
      */
     public function show($id, $level, $instructor)
     {
-        if ($id == "Ongoing") {
-            if ($level == 3 ) {
-               $projects = Project::whereStatus_id(1)->get();
+        if($id == "All"){
+            if ($level == 3) {
+               $projects = Project::paginate(10);
             }else{
-                $projects = Project::whereStatus_id(1)->whereInstructor_id($instructor)->orderBy('status_id', 'asc')->oldest()->get();
+                $projects = Project::whereInstructor_id($instructor)->orderBy('status_id', 'asc')->oldest()->paginate(10);
+            }
+            Session::flash('All', 'All');
+        }
+        elseif ($id == "Ongoing") {
+            if ($level == 3 ) {
+               $projects = Project::whereStatus_id(1)->paginate(10);
+            }else{
+                $projects = Project::whereStatus_id(1)->whereInstructor_id($instructor)->orderBy('status_id', 'asc')->oldest()->paginate(10);
             }
             Session::flash('Ongoing', 'Ongoing');
         }elseif($id == "Closed"){
             if ($level == 3 ) {
-               $projects = Project::whereStatus_id(2)->get();
+               $projects = Project::whereStatus_id(2)->paginate(10);
             }else{
-                $projects = Project::whereStatus_id(2)->whereInstructor_id($instructor)->orderBy('status_id', 'asc')->oldest()->get();
+                $projects = Project::whereStatus_id(2)->whereInstructor_id($instructor)->orderBy('status_id', 'asc')->oldest()->paginate(10);
             }
             Session::flash('Closed', 'Closed');
         }elseif($id == "Received"){
             if ($level == 3 ) {
-               $projects = Project::whereStatus_id(3)->get();;
+               $projects = Project::whereStatus_id(3)->paginate(10);
             }else{
-                $projects = Project::whereStatus_id(3)->orderBy('status_id', 'asc')->oldest()->get();
+                $projects = Project::whereStatus_id(3)->orderBy('status_id', 'asc')->oldest()->paginate(10);
             }
             Session::flash('Received', 'Received');
         }elseif ($id == "Pending") {
             if ($level == 3 ) {
-               $projects = Project::whereStatus_id(4)->get();;
+               $projects = Project::whereStatus_id(4)->paginate(10);
             }else{
-                $projects = Project::whereStatus_id(4)->whereInstructor_id($instructor)->orderBy('status_id', 'asc')->oldest()->get();
+                $projects = Project::whereStatus_id(4)->whereInstructor_id($instructor)->orderBy('status_id', 'asc')->oldest()->paginate(10);
             }
             Session::flash('Pending', 'Pending');
         }elseif ($id == "Approved"){
             if ($level == 3 ) {
-               $projects = Project::whereStatus_id(5)->get();;
+               $projects = Project::whereStatus_id(5)->paginate(10);
             }else{
-                $projects = Project::whereStatus_id(5)->whereInstructor_id($instructor)->orderBy('status_id', 'asc')->oldest()->get();
+                $projects = Project::whereStatus_id(5)->whereInstructor_id($instructor)->orderBy('status_id', 'asc')->oldest()->paginate(10);
             }
             Session::flash('Approved', 'Approved');
-        }elseif($id == "All"){
-            if ($level == 3) {
-               $projects = Project::all();
-            }else{
-                $projects = Project::whereInstructor_id($instructor)->orderBy('status_id', 'asc')->oldest()->get();
-            }
-            Session::flash('All', 'All');
         }
         $count = count($projects);
         return view('project-list', compact('projects', 'count'));
     }
 
     public function showReceived($id){
-        $instructor = User::whereId($id)->get();
-        $projectSubmits = ProjectUser::whereStatus_id(4)->get();
+        $instructor = User::whereId($id)->paginate(10);
+        $projectSubmits = ProjectUser::whereStatus_id(4)->paginate(10);
         $count = count($projectSubmits);
-        /*dd($instructor[0]->full_name);*/
-        /*$x = $instructorProjects->toArray();
-        foreach($instructorProjects as $i){
-            $projects = ProjectUser::whereStatus_id(4)->whereProject_id($x)->get();
-        }*/
-        /*dd(json_decode($instructor, true));*/
-        /*$projects->project->instructor->full_name*/
-        /*dd($projects);*/
 
         return view('project-received-list', compact('projectSubmits','count'));
     }
@@ -130,7 +129,6 @@ class ProjectController extends Controller
         $approveProject->status_id = 5;
         if($approveProject->save()){
             echo "success";
-            return back();
         }else{
             echo "error";
         }

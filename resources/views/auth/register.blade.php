@@ -86,7 +86,7 @@
             <div class="col-md-6">
                 <select id="senior" class="form-control" name="senior" value="{{ old('senior') }}" required>
                     @foreach(App\User::whereIn('Level_id', [2,3])->get() as $senior)
-                    <option value="{{ $senior->id }}">{{ $senior->firstname." ".$senior->lastname." - Level_id ".$senior->level_id }}</option>
+                    <option value="{{ $senior->id }}">{{ ucwords($senior->full_name)." - ". $senior->level->name }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('level_id'))

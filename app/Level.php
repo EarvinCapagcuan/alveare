@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Level extends Model
 {
-/*    public function user(){
+    public function user(){
     	return $this->hasMany('App\User');
-    }*/
+    }
 }

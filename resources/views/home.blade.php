@@ -88,6 +88,5 @@
     </div>
     @endif
 </div>
-<span><a href='/instructor-page'>{{ url('/') }}instructor</a></span>
 
 @endsection

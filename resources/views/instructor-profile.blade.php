@@ -5,6 +5,7 @@
 @if((Auth::User()) && (Auth::User()->level_id == 2))
 
 @section('content')
+
 <div class="row">
     <div class="col-lg-6 py-1 px-0 my-auto">
         <h2>Account Information</h2>   
@@ -52,7 +53,6 @@
         </div>
         <div class="uk-card-footer">
             <span class="uk-text-right uk-position-bottom">
-                <a href="#">See all announcements</a>
             </span>
         </div>
     </div>
