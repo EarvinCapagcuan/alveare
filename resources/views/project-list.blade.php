@@ -38,7 +38,7 @@
 	@endif
 
 </div>
-
+@if(Auth::User()->level_id == 2)
 <!-- modal for editing -->
 <div class="uk-modal-full" id="project-modal-{{ $project->id }}" uk-modal>
 	<div class="uk-modal-dialog">
@@ -139,11 +139,12 @@
 		</div>
 	</div>
 </div>
+@endif
 @endforeach
 <ul class="uk-pagination uk-flex-center m-2">
 	{{ $projects->links() }}
 </ul>
-
+@if(Auth::User()->level_id == 2)
 {{-- modal for creating projects --}}
 <div id="create-project-modal" class="uk-flex-top" uk-modal>
 	<div class="uk-modal-dialog uk-margin-auto-vertical">
@@ -177,6 +178,7 @@
 		
 	</div>
 </div>
+@endif
 
 <!-- js to save project edits -->
 <script type="text/javascript">

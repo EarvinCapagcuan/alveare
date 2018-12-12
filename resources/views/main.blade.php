@@ -75,6 +75,7 @@
 						<h3 class="uk-card-title"><i uk-icon="icon:info"></i>&nbsp;Recent announcements</h3>
 					</div>
 					<div class="uk-card-body">
+						@if($notices != '[]')
 						@foreach($notices as $key => $notice)
 							@if($key == 2)
 								@break
@@ -89,6 +90,9 @@
 							<small><em>Posted by: {{ $user->full_name }},&nbsp;{{ $notice->created_at->diffForHumans() }}</em></small>
 						</article>
 						@endforeach
+						@else
+						No data yet.
+						@endif
 					</div>
 				</div>
 			</div>
@@ -100,6 +104,7 @@
 						<h3 class="uk-card-title"><i class="far fa-calendar-alt"></i>&nbsp;Recent Projects</h3>
 					</div>
 					<div class="uk-card-body">
+						@if($notices != '[]')
 						@foreach($projects as $key => $project)
 						@if($key == 2)
 						@break
@@ -115,6 +120,9 @@
 							<hr>
 						</article>
 						@endforeach
+						@else
+						No data yet.
+						@endif
 					</div>
 				</div>
 			</div>

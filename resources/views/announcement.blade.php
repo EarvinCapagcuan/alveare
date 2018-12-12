@@ -15,55 +15,59 @@
 	</div>
 	<div class="row">
 		<div class="col">
-		@foreach($notices as $notice)
-			<div class="uk-card-default uk-card-small m-3">
-				<div class="uk-card-header">
-					<span class="uk-card-title">{{ $notice->title }}</span>
-					@if(Auth::User()->id == $notice->instructor->id)
-					<span><a href="#editProject-{{ $notice->id }}" uk-tooltip="title: Edit Notice" uk-toggle><i uk-icon="icon:file-edit"></i></a></span>
-					@endif
-				</div>
-				<div class="uk-card-body">
-					<p>{{ $notice->content }}</p>
-					<div class="uk-flex uk-flex-between" uk-grid>
-						<small>{{ $notice->instructor->full_name }}</small>
-						<small><em>{{ $notice->created_at->diffForHumans() }}</em></small>
-					</div>
-				</div>
-			</div>
-			@if(Auth::User()->id == $notice->instructor->id)
-			<!-- edit announcement modal -->
-			<div id="editProject-{{ $notice->id }}" uk-modal>
-				<div class="uk-modal-dialog">
-				<button class="uk-modal-close-default" uk-close></button>
-					<div class="uk-modal-header">
-						<div class="uk-modal-title">
-							Edit Announcement
+			@if(!empty($notices))
+					@foreach($notices as $notice)
+					<div class="uk-card-default uk-card-small m-3">
+						<div class="uk-card-header">
+							<span class="uk-card-title">{{ $notice->title }}</span>
+							@if(Auth::User()->id == $notice->instructor->id)
+							<span><a href="#editProject-{{ $notice->id }}" uk-tooltip="title: Edit Notice" uk-toggle><i uk-icon="icon:file-edit"></i></a></span>
+							@endif
+						</div>
+						<div class="uk-card-body">
+							<p>{{ $notice->content }}</p>
+							<div class="uk-flex uk-flex-between" uk-grid>
+								<small>{{ $notice->instructor->full_name }}</small>
+								<small><em>{{ $notice->created_at->diffForHumans() }}</em></small>
+							</div>
 						</div>
 					</div>
-					<div class="uk-modal-body">
-						<form class="uk-form-stacked">
-							<label class="uk-form-label" for="title">Title</label>
-							<div class="uk-form-controls">
-								<input type="text" name="title" id="title_{{ $notice->id }}" class="uk-input" value="{{ $notice->title }}">
+					@if(Auth::User()->id == $notice->instructor->id)
+					<!-- edit announcement modal -->
+					<div id="editProject-{{ $notice->id }}" uk-modal>
+						<div class="uk-modal-dialog">
+							<button class="uk-modal-close-default" uk-close></button>
+							<div class="uk-modal-header">
+								<div class="uk-modal-title">
+									Edit Announcement
+								</div>
 							</div>
-							<label class="uk-form-label" for="content">Content</label>
-							<div class="uk-form-controls">
-								<textarea class="uk-textarea" name="content" id="content_{{ $notice->id }}">{{ $notice->content }}</textarea>
+							<div class="uk-modal-body">
+								<form class="uk-form-stacked">
+									<label class="uk-form-label" for="title">Title</label>
+									<div class="uk-form-controls">
+										<input type="text" name="title" id="title_{{ $notice->id }}" class="uk-input" value="{{ $notice->title }}">
+									</div>
+									<label class="uk-form-label" for="content">Content</label>
+									<div class="uk-form-controls">
+										<textarea class="uk-textarea" name="content" id="content_{{ $notice->id }}">{{ $notice->content }}</textarea>
+									</div>
+								</form>
 							</div>
-						</form>
+							<div class="uk-modal-footer text-right">
+								<button class="uk-button" type="submit" onClick="editNotice({{ $notice->id }})">Save</button>
+								<button class="uk-button uk-modal-close">Cancel</button>
+							</div>
+						</div>
 					</div>
-					<div class="uk-modal-footer text-right">
-						<button class="uk-button" type="submit" onClick="editNotice({{ $notice->id }})">Save</button>
-						<button class="uk-button uk-modal-close">Cancel</button>
-					</div>
-				</div>
-			</div>
+					@endif
+				@endforeach
+			@else
+			No Data.
 			@endif
-		@endforeach
 		</div>
 	</div>
-
+	@foreach($notices as $notice)
 	@if(Auth::User()->id == $notice->instructor->id)
 	<!-- post announcement modal -->
 	<div id="post-announcement" uk-modal>
@@ -91,6 +95,8 @@
 		</div>
 	</div>
 	@endif
+	@endforeach
+
 <script type="text/javascript">
 	function postNotice(id){
 		let postTitle = $('#post-title').val();
