@@ -42,6 +42,7 @@
 </div>
 <div class="row p-3 uk-flex-between">
 	@if(Auth::User()->level_id != 1)
+		@if(!empty($users))
 	<div class="col-4 uk-width-1-4 p-0">
 		<div class="uk-card uk-card-small uk-card-default">
 			<div class="uk-card-header">
@@ -65,6 +66,10 @@
 			</div>
 		</div>
 	</div>
+	@else{
+	No data.
+}
+@endif
 	@endif
 	<div class="col-7 uk-width-2-3 p-0 m-auto">
 		<div class="row">
@@ -74,7 +79,7 @@
 						<h3 class="uk-card-title"><i uk-icon="icon:info"></i>&nbsp;Recent announcements</h3>
 					</div>
 					<div class="uk-card-body">
-						@if($notices != '[]')
+						@if(!empty($notices))
 						@foreach($notices as $key => $notice)
 							@if($key == 2)
 								@break
