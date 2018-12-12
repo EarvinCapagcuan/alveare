@@ -3,6 +3,7 @@
 @section('title', 'Register')
 
 @section('content')
+@if(Auth::User() && Auth::User()->level_id == 3)
 <div class="panel-heading">Register</div>
 
 <div class="panel-body">
@@ -164,4 +165,13 @@
 <script type="text/javascript">
 
 </script>
+@elseif(Auth::User() && Auth::User()->level_id != 3)
+<script type="text/javascript">
+    window.location = '/unauthorized';
+</script>
+@else
+<script type="text/javascript">
+    window.location = '/unauthorized';
+</script>
+@endif
 @endsection

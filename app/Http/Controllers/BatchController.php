@@ -17,7 +17,7 @@ class BatchController extends Controller
 
 	public function create(Request $request){
 		$this->validate(request(), [
-			'batchName' => 'required|unique',
+			'batchName' => 'required|unique:batches,batch_name',
 			'slots' => 'required|integer|min:30|max:45',
 		]);
 

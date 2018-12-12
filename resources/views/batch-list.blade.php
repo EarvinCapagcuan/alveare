@@ -163,7 +163,6 @@
 	function addBatch(){
 		let batchName = $('#month').val()+'-'+$('#time').val()+'-'+$('#year').val();
 		let slots = $('#slots').val();
-		console.log(batchName+" "+slots);
 
 		$.ajax({
 			url : '/admin/start-batch',
@@ -180,6 +179,7 @@
 				}
 			},
 			error : function(data){
+				console.log(data);
 				$.each(data.responseJSON.errors, function(key,value){
 					UIkit.notification({message : value, status : 'danger'});
 				});
