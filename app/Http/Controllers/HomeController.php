@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 use App\User;
 use App\Level;
 Use App\Project;
@@ -16,6 +18,8 @@ class HomeController extends Controller
      *
      * @return void
      */
+    use SoftDeletes;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -133,6 +137,9 @@ class HomeController extends Controller
     public function accounts($q){
         if($q == 3){
             $users = User::where('level_id', '!=', Auth::User()->level_id)->get();
+            $softs = User::onlyTrashed()->get();
+
+            return view('users-list', compact('users', 'softs'));
         }else{
             $users = User::whereSenior_id(Auth::User()->id)->get();
         }
@@ -143,6 +150,14 @@ class HomeController extends Controller
         $user = User::findOrFail($id);
         
         if ($user->delete()) {
+            echo "success";
+        }else{
+            echo "error";
+        }
+    }
+
+    public function reactivate($id){
+        if (User::withTrashed($id)->restore()) {
             echo "success";
         }else{
             echo "error";

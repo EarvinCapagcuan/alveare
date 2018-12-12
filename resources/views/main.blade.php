@@ -20,7 +20,6 @@
 				@else
 				<a href="/profile" class="uk-button uk-button-text uk-card-title">{{ ucwords(Auth::User()->firstname) }}</a>
 				@endif
-
 			</div>
 		</div>
 		<div class="uk-card uk-width-1-3@m uk-card-body uk-card-default uk-card-small text-center">

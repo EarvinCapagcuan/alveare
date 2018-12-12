@@ -1,5 +1,9 @@
-<div class="bg-dark p-5">
-	<span class="text-light">Julian Earvin King Capagcuan &copy; 2018</span>
+<div class="row m-0 p-0 bg-dark p-5 uk-flex">
+	<div class="text-light col-5 text-left">Julian Earvin King Capagcuan &copy; 2018</div>
+	<div class="col-6 text-right"><a class="uk-link-text text-light" href="#disclaimer-modal">Alveare Disclaimer</a></div>
+</div>
+<div>
+	
 </div>
 
 <!-- date picker -->

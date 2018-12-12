@@ -50,6 +50,7 @@ Route::get('/{id}/announcements', 'NoticeController@show');
 Route::patch('/admin/{id}/edit-post', 'NoticeController@edit');
 
 Route::delete('/admin/confirmDeact-{id}', 'HomeController@delete');
+Route::patch('/admin/reactivateAcc-{id}', 'HomeController@reactivate');
 
 /*view projects level 3|2*/
 Route::get('/admin/{status}/{level}-{instructor}/projects', 'ProjectController@show');

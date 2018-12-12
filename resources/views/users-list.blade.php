@@ -5,7 +5,40 @@
 @section('content')
 <div class="row">
 	<div class="col">
-		<h3>User List</h3>
+		<h3>User List</h3><h4>
+		<div>
+			<span><small>View</small> <a href="#deactivated-list" class="uk-button uk-button-text" uk-toggle>deactivated accounts</a></span>
+		</div>
+		<div id="deactivated-list" uk-modal>
+			<div class="uk-modal-dialog">
+				<button class="uk-modal-close-default" uk-close></button>
+				<div class="uk-modal-header">
+					<h3>Deactivated accounts</h3>
+				</div>
+				<div class="uk-modal-body" uk-overflow-auto>
+					<table class="uk-table">
+						<thead>
+							<th>Name</th>
+							<th>Level</th>
+							<th>Deactivated</th>
+							<th>Actions</th>
+						</thead>
+					@if(!empty($softs))
+						@foreach($softs as $soft)
+						<tr>
+							<td>{{ $soft->full_name }}</td>
+							<td>{{ $soft->level->name}}</td>
+							<td><em>Deactived {{ $soft->deleted_at->diffForhumans() }}</em></td>
+							<td><button class="uk-link-text btn" type="button" onClick="reactivate({{ $soft->id }})"><i uk-icon="icon:refresh" uk-tooltip="title: Reactivate"></i></button></td>
+						</tr>
+						@endforeach
+					@else
+						<span>No records yet.</span>
+					@endif
+					</table>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 <div class="row">
@@ -43,7 +76,7 @@
 					@if(Auth::User()->level_id == 3)
 					<td>
 						<a href="#edit-modal-{{ $user->id }}" class="uk-button uk-button-secondary" uk-tooltip="title: Edit" uk-toggle><i uk-icon="icon:file-edit"></i></a>&nbsp;
-						<a href="#deact-{{ $user->id }}" class="uk-button uk-button-secondary" uk-tooltip="title: Deactivate" uk-toggle><i uk-icon="icon:trash"></i></a>
+						<a href="#deact-{{ $user->id }}" class="uk-button uk-button-secondary" uk-tooltip="title: Deactivate" uk-toggle><i uk-icon="icon:ban"></i></a>
 					</td>
 					@endif
 				</tr>
@@ -208,6 +241,29 @@
 				}
 			},
 			error : function(data){
+				$.each(data.responseJSON.errors, function(key,value){
+					UIkit.notification({message : value, status : 'danger'});
+				});
+			}
+		});
+	}
+
+	function reactivate(id){
+		$.ajax({
+			url : '/admin/reactivateAcc-'+id,
+			type : 'PATCH',
+			data : {
+				_method : 'PATCH',
+				_token : '{{ csrf_token() }}',
+			},
+			success : function(data){
+				if(data){
+				window.location.reload();
+				sessionStorage.reloadAfterPageLoad = true;
+				}
+			},
+			error : function(data){
+				console.log(data);
 				$.each(data.responseJSON.errors, function(key,value){
 					UIkit.notification({message : value, status : 'danger'});
 				});
