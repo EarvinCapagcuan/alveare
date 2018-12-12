@@ -58,9 +58,41 @@
 			<div class="uk-modal-body">
 				<form>
 					<label class="uk-form-label" for="batchName">Batch Name</label>
+					<div><em>Pattern: Month-Time-Year</em></div>
 					<div class="uk-form-controls">
-						<input type="text" name="batchName" id="batchName" pattern="(January|February|March|April|May|June|July|August|September|October|November|December)[-](Morning|Evening)[-][0-9]{4}">
-						<br><small>Pattern: <em>Month-Month-Year</em></small>
+						<select name="month" id="month" class="month uk-select uk-width-1-3">
+							<option value="January">January</option>
+							<option value="February">February</option>
+							<option value="March">March</option>
+							<option value="April">April</option>
+							<option value="May">May</option>
+							<option value="June">June</option>
+							<option value="July">July</option>
+							<option value="August">August</option>
+							<option value="September">September</option>
+							<option value="October">October</option>
+							<option value="November">November</option>
+							<option value="December">December</option>
+						</select>
+						-
+						<select name="time" id="time" class="time uk-select uk-width-1-3">
+							<option value="Morning">Morning</option>
+							<option value="Evening">Evening</option>
+						</select>
+						-
+						<select name="year" id="year" class="batchName uk-select uk-width-1-5">
+							<option value="2018">2018</option>
+							<option value="2019">2019</option>
+							<option value="2020">2020</option>
+							<option value="2021">2021</option>
+							<option value="2022">2022</option>
+							<option value="2023">2023</option>
+							<option value="2024">2024</option>
+							<option value="2025">2025</option>
+						</select>
+
+						{{-- <input type="text" name="batchName" id="batchName" pattern="(January|February|March|April|May|June|July|August|September|October|November|December)[-](Morning|Evening)[-][0-9]{4}">
+						<br><small>Pattern: <em>Month-Month-Year</em></small> --}}
 					</div>
 					<label class="uk-form-label" for="slots">Slots</label>
 					<div class="uk-form-controls">
@@ -68,7 +100,7 @@
 					</div>
 				</div>
 				<div class="uk-modal-footer">
-					<button class="uk-button" type="submit">Save</button>
+					<button class="uk-button" type="button" onClick="addBatch()">Save</button>
 				</div>
 			</form>
 		</div>
@@ -100,7 +132,6 @@
 		</div>
 	</div>
 	@endforeach
-@endsection
 
 <script type="text/javascript">
 	function studentList(id){
@@ -115,13 +146,51 @@
 				_token : '{{ csrf_token() }}'
 			},
 			success : function(data){
-				$.each(data, function (key, column){
-					$('#studentlist-'+id).append("<tr><td>"+data[key].firstname+" "+data[key].lastname+"</td><td>"+(data[key].level_id == 1 ? "Student" : "Instructor") +"</td></tr>");
-				});
+				if(data != ''){
+					$.each(data, function (key, column){
+						$('#studentlist-'+id).append("<tr><td>"+data[key].firstname+" "+data[key].lastname+"</td><td>"+(data[key].level_id == 1 ? "Student" : "Instructor") +"</td></tr>");
+					});
+				}else{
+					$('#studentlist-'+id).html('<tr><td colspan=2>No Data.&nbsp;<a href="{{route('register')}}">Add a student now?</a></td></tr>');
+				}
 			},
 			error : function(jXHR){
 				console.log(jXHR);
 			}
 		});
 	}
+
+	function addBatch(){
+		let batchName = $('#month').val()+'-'+$('#time').val()+'-'+$('#year').val();
+		let slots = $('#slots').val();
+		console.log(batchName+" "+slots);
+
+		$.ajax({
+			url : '/admin/start-batch',
+			type : 'POST',
+			data : {
+				batchName : batchName,
+				slots : slots,
+				_method : 'POST',
+				_token : '{{ csrf_token() }}'
+			},			success : function(data){
+				if(data){
+					window.location.reload();
+				sessionStorage.reloadAfterPageLoad = true;
+				}
+			},
+			error : function(data){
+				$.each(data.responseJSON.errors, function(key,value){
+					UIkit.notification({message : value, status : 'danger'});
+				});
+			}
+		});
+	}
+	$( function () {
+		if ( sessionStorage.reloadAfterPageLoad ) {
+			UIkit.notification({message : 'Success.', status : 'success'});
+			sessionStorage.clear();
+		}
+	});
 </script>
+@endsection

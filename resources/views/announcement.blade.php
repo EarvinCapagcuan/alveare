@@ -105,11 +105,19 @@
 				_token : '{{ csrf_token() }}'
 			},
 			success : function(data){
-				window.location.reload();
+				if(data){
+					window.location.reload();
 				sessionStorage.reloadAfterPageLoad = true;
+				}
+			},
+			error : function(data){
+				$.each(data.responseJSON.errors, function(key,value){
+					UIkit.notification({message : value, status : 'danger'});
+				});
 			}
 		});
 	}
+
 
 	function editNotice(id){
 		let editTitle = $('#title_'+id).val();
@@ -124,21 +132,25 @@
 				_token : '{{ csrf_token() }}'
 			},
 			success : function(data){
-				if (data == "success") {
+				console.log(data);
+				if(data){
 					window.location.reload();
-					sessionStorage.reloadAfterPageLoad = true;
-				}else{
-					UIkit.notification('There was an error.');
+				sessionStorage.reloadAfterPageLoad = true;
 				}
+			},
+			error : function(data){
+				console.log(data);
+				$.each(data.responseJSON.errors, function(key,value){
+					UIkit.notification({message : value, status : 'danger'});
+				});
 			}
 		});
 	}
-	
 	$( function () {
-        if ( sessionStorage.reloadAfterPageLoad ) {
-            UIkit.notification('Success.');
-            sessionStorage.clear();
-        }
-    });
+		if ( sessionStorage.reloadAfterPageLoad ) {
+			UIkit.notification({message : 'Success.', status : 'success'});
+			sessionStorage.clear();
+		}
+	});
 </script>
 @endsection

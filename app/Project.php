@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-    public function student(){
-        return $this->belongsToMany('App\User', 'project_users')->withPivot('status_id')->withTimestamps();
+    public function user(){
+        return $this->belongsToMany('App\User', 'project_users');
     }
     public function instructor(){
     	return $this->belongsTo('App\User');
@@ -19,8 +19,5 @@ class Project extends Model
 
     public function batch(){
     	return $this->belongsTo('App\Batch');
-    }
-    public function projectUser(){
-    	return $this->belongsToMany('App\ProjectUser');
     }
 }

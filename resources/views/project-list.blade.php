@@ -3,10 +3,12 @@
 @section('title', 'Project List')
 
 @section('content')
-<h3>Projects <span class="uk-badge">{{ $count }}</span></h3>
 @if(Auth::User()->level_id == 2)
-<div>
-	<a href="/admin/create-project" class="uk-button">Add project</a>
+<div class="row">
+	<div class="col uk-flex uk-flex-between">
+		<h3>Projects <span class="uk-badge">{{ $count }}</span></h3>
+		<div><a href="#create-project-modal" class="uk-button uk-button-text" uk-toggle>Add Project</a></div>
+	</div>
 </div>
 @endif
 <div>
@@ -36,6 +38,7 @@
 	@endif
 
 </div>
+
 <!-- modal for editing -->
 <div class="uk-modal-full" id="project-modal-{{ $project->id }}" uk-modal>
 	<div class="uk-modal-dialog">
@@ -48,14 +51,16 @@
 				<h3 class="uk-text-center">Edit {{ $project->project_name }}</h3>
 				<form class="uk-form-stacked">
 					<label class="uk-form-label" for="title">Project Title</label>
-					<div class="uk-form-control">
+					<div class="uk-form-controls
+					">
 						<input type="text" class="uk-input" name="title" id="title-{{ $project->id }}" value="{{ $project->project_name }}"></input>
 					</div>
 					<div class="uk-child-width-1-2" uk-grid>
 						<div class="uk-width-1-2">
 							<label class="uk-form-label" for="batch">Batch</label>
-							<div class="uk-form-control">
-								<select name="batch" id="batch-{{ $project->id }}" class="uk-select">
+							<div class="uk-form-controls
+							">
+								<select name="batch" id="batch-{{ $project->id }}" class="uk-select uk-disabled" disabled>
 									@foreach(App\Batch::all() as $batch)
 									<option value="{{ $batch->id }}" {{ $batch->id == $project->batch_id ? 'selected' : ''  }}>{{ $batch->batch_name }}</option>
 									@endforeach
@@ -64,13 +69,15 @@
 						</div>
 						<div class="uk-width-1-2">
 							<label class="uk-form-label" for="deadline">Deadline</label>
-							<div class="uk-form-control">
+							<div class="uk-form-controls
+							">
 								<input type="text" class="uk-input date" name="deadline" id="deadline-{{ $project->id }}" value="{{ $project->deadline }}"></input>
 							</div>
 						</div>
 					</div>
 					<label class="uk-form-label" for="req">Project Requirements</label>
-					<div class="uk-form-control">
+					<div class="uk-form-controls
+					">
 						<textarea class="uk-textarea" id="req-{{ $project->id }}"" name="req">{{ $project->project_req }}</textarea>
 					</div>
 					<div class="uk-button-group my-3">
@@ -136,7 +143,41 @@
 <ul class="uk-pagination uk-flex-center m-2">
 	{{ $projects->links() }}
 </ul>
-@endsection
+
+{{-- modal for creating projects --}}
+<div id="create-project-modal" class="uk-flex-top" uk-modal>
+	<div class="uk-modal-dialog uk-margin-auto-vertical">
+		<div class="uk-modal-header">
+			<div class="uk-modal-title">Add Project</div>
+		</div>
+		<div class="uk-modal-body">
+			<form class="uk-form-stacked">
+				<label class="uk-form-label" for="projectName">Project title</label>
+				<div class="uk-form-controls">
+					<input type="text" name="projectName" id="projectName" class="uk-input">
+				</div>
+				<label class="uk-form-label" for="projectRequirements">Project requirements</label>
+				<div class="uk-form-controls">
+					<textarea name="projectRequirements" id="projectRequirements" class="uk-textarea"></textarea>
+				</div>
+				<label class="uk-form-label" for="projectBatch">Batch</label>
+				<div class="uk-form-controls">
+					<input type="text" name="projectBatch" id="projectBatch" class="uk-disabled uk-input" value="{{ Auth::User()->batch->batch_name }}" disabled>
+				</div>
+				<label class="uk-form-label" for="projectDeadline">Deadline</label>
+				<div class="uk-form-controls">
+					<input type="text" name="projectDeadline" id="projectDeadline" class="date uk-date">
+				</div>
+			</form>
+		</div>
+		<div class="uk-modal-footer">
+			<button class="uk-button" onClick="createProject()">Add project</button>
+			<button class="uk-button uk-modal-close">Cancel</button>
+		</div>
+		
+	</div>
+</div>
+
 <!-- js to save project edits -->
 <script type="text/javascript">
 	function edit(id){
@@ -157,12 +198,15 @@
 				_token : '{{ csrf_token() }}'
 			},
 			success : function(data){
-				if(data=="success"){
+				if(data){
 					window.location.reload();
-					console.log(data);
-				}else{
-					window.location.reload();
+				sessionStorage.reloadAfterPageLoad = true;
 				}
+			},
+			error : function(data){
+				$.each(data.responseJSON.errors, function(key,value){
+					UIkit.notification({message : value, status : 'danger'});
+				});
 			}
 		});
 	}
@@ -177,12 +221,15 @@
 				_token : '{{ csrf_token() }}'
 			},
 			success : function(data){
-				if (data == "success") {
+				if(data){
 					window.location.reload();
-					console.log(data);
-				}else{
-					window.location.reload();
+				sessionStorage.reloadAfterPageLoad = true;
 				}
+			},
+			error : function(data){
+				$.each(data.responseJSON.errors, function(key,value){
+					UIkit.notification({message : value, status : 'danger'});
+				});
 			}
 		});
 	}
@@ -201,4 +248,40 @@
 			}
 		});
 	}
+
+	function createProject(){
+		let projectName = $('#projectName').val();
+		let projectDeadline = $('#projectDeadline').val();
+		let projectRequirements = $('#projectRequirements').val();
+
+		$.ajax({
+			url : '/admin/create-project',
+			type : 'POST',
+			data : {
+				title : projectName,
+				deadline : projectDeadline,
+				requirements : projectRequirements,
+				_method : 'POST',
+				_token : '{{ csrf_token() }}'
+			},
+			success : function(data){
+				if(data){
+					window.location.reload();
+				sessionStorage.reloadAfterPageLoad = true;
+				}
+			},
+			error : function(data){
+				$.each(data.responseJSON.errors, function(key,value){
+					UIkit.notification({message : value, status : 'danger'});
+				});
+			}
+		});
+	}
+	$( function () {
+		if ( sessionStorage.reloadAfterPageLoad ) {
+			UIkit.notification({message : 'Success.', status : 'success'});
+			sessionStorage.clear();
+		}
+	});
 </script>
+@endsection

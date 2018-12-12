@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
 
 Use App\Level;
 Use App\User;
@@ -30,17 +32,18 @@ class ProjectController extends Controller
     public function create(Request $request)
     {
         $this->validate(request(), [
-            'req' => 'required|string',
+            'requirements' => 'required|string',
             'title' => 'required|string',
+            'deadline' => 'required',
         ]);
 
         $project = new Project;
 
-        $project->instructor_id = $request->id;
-        $project->project_req = request('req');
+        $project->instructor_id = Auth::User()->id;
+        $project->batch_id = Auth::User()->batch_id;
+        $project->project_req = request('requirements');
         $project->project_name = request('title');
-        $project->batch_id = $request->batch_id;
-        $project->deadline = $request->deadline;
+        $project->deadline = request('deadline');
 
         if ($project->save()) {
             echo "success";
@@ -137,16 +140,21 @@ class ProjectController extends Controller
     }
 
     public function projectsStudent($batch){
-        $projects = Project::whereBatch_id($batch)->whereStatus_id(1)->get();
-        $count = count($projects);
+        $stat = [1, 2];
+        $projects = Project::whereBatch_id($batch)->whereIn('status_id', $stat)->get();
+/*        foreach($projects as $project){
+            $proj = ProjectUser::whereProject_id($project->id)->whereUser_id(Auth::User()->id)->get();
+        }*/
+        $users = ProjectUser::whereUser_id(Auth::User()->id)->get();
+        $count = $projects->count();
 
-        return view('student-project-list', compact('projects', 'count'));
+        return view('student-project-list', compact('projects', 'count', 'users'));
     }
 
     public function submitProject($id, $project){
         $projects = Project::findOrFail($project);
-        $projects->student()->sync($id);
-        $json = json_decode($projects->student, true);
+        $projects->user()->sync($id);
+        $json = json_decode($projects->user, true);
         $batch = $json[0]['batch_id'];
         
         return redirect('/batch-'.$batch.'/projects-list');

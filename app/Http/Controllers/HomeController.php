@@ -52,15 +52,19 @@ class HomeController extends Controller
         return view('profile', compact('users', 'projects', 'notices'));
     }
 
-    public function main($id){
-        if ($id == 0) {
+    public function main(){
+        if (Auth::User()->level_id == 3) {
             $users = User::orderBy('created_at', 'desc')->get();
             $projects = Project::all();
             $notices = Notice::all();
-        }else{
-            $users = User::whereSenior_id($id)->orderBy('created_at', 'desc')->get();
-            $projects = Project::whereInstructor_id($id)->get();
-            $notices = Notice::whereInstructor_id($id)->get();
+        }elseif(Auth::User()->level_id == 2){
+            $users = User::whereSenior_id(Auth::User()->id)->orderBy('created_at', 'desc')->get();
+            $projects = Project::whereInstructor_id(Auth::User()->id)->get();
+            $notices = Notice::whereInstructor_id(Auth::User()->id)->get();
+        }elseif(Auth::User()->level_id == 1){
+            $users = User::whereSenior_id(Auth::User()->senior_id)->orderBy('created_at', 'desc')->get();
+            $projects = Project::whereInstructor_id(Auth::User()->senior_id)->get();
+            $notices = Notice::whereInstructor_id(Auth::User()->senior_id)->get();
         }
         return view('main', compact('users', 'projects', 'notices'));
     }
@@ -133,6 +137,16 @@ class HomeController extends Controller
             $users = User::whereSenior_id(Auth::User()->id)->get();
         }
         return view('users-list', compact('users'));
+    }
+
+    public function delete($id, Request $request){
+        $user = User::findOrFail($id);
+        
+        if ($user->delete()) {
+            echo "success";
+        }else{
+            echo "error";
+        }
     }
 
 }

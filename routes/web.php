@@ -17,7 +17,8 @@ Auth::routes();
 Route::get('/', 'HomeController@profile');
 Route::get('/profile', 'HomeController@profile');
 Route::get('/home', 'HomeController@profile');
-Route::get('/main-{id}', 'HomeController@main');
+Route::get('/main', 'HomeController@main');
+
 
 /*error when account does not have authorization*/
 Route::get('/unauthorized', function(){
@@ -42,10 +43,13 @@ Route::patch('/admin/edit-project/{id}', 'ProjectController@edit');
 /*create*/
 Route::post('/admin/create-project', 'ProjectController@create');
 Route::post('/admin/{id}/create-post', 'NoticeController@post');
+Route::post('/admin/start-batch', 'BatchController@create');
 
 /*notices*/
 Route::get('/{id}/announcements', 'NoticeController@show');
 Route::patch('/admin/{id}/edit-post', 'NoticeController@edit');
+
+Route::delete('/admin/confirmDeact-{id}', 'HomeController@delete');
 
 /*view projects level 3|2*/
 Route::get('/admin/{status}/{level}-{instructor}/projects', 'ProjectController@show');

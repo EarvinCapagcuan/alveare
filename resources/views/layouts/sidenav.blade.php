@@ -6,7 +6,7 @@
 			<li class="uk-parent">
 				<a href="#"><i uk-icon="icon:home"></i>&nbsp;Home</a>
 					<ul class="uk-nav-sub">
-					<li><a href="/main-0">Main</a></li>
+					<li><a href="/main">Main</a></li>
 					<li><a href="/profile">Profile</a></li>	
 				</ul>
 			</li>
@@ -44,8 +44,6 @@
 		</ul>
 		@elseif(Auth::user()->level_id==1)
 		<ul class="uk-nav-default" uk-nav>
-			<li class="uk-active"><h4 class="text-center"><i uk-icon="icon:cog"></i>&nbsp;Dashboard</h4>
-			<li><a href="/main-{{Auth::User()->senior_id}}"><i uk-icon="icon:home"></i>&nbsp; Profile</a></li>	
 			<li><a href="/batch-{{ Auth::User()->batch_id}}/projects-list"><i uk-icon="icon:calendar"></i>&nbsp;Projects</a></li>
 			<li><a href="/{{ Auth::User()->id }}/announcements"><i uk-icon="icon:info"></i>&nbsp;Announcements</a></li>
 			</li>

@@ -43,9 +43,26 @@
 					@if(Auth::User()->level_id == 3)
 					<td>
 						<a href="#edit-modal-{{ $user->id }}" class="uk-button uk-button-secondary" uk-tooltip="title: Edit" uk-toggle><i uk-icon="icon:file-edit"></i></a>&nbsp;
+						<a href="#deact-{{ $user->id }}" class="uk-button uk-button-secondary" uk-tooltip="title: Deactivate" uk-toggle><i uk-icon="icon:trash"></i></a>
 					</td>
 					@endif
 				</tr>
+				{{-- confirm delete --}}
+				<div class="uk-flex-top" id="deact-{{ $user->id }}" uk-modal>
+					<div class="uk-modal-dialog uk-margin-auto-vertical">
+						<button class="uk-modal-close-default" type="button" uk-close></button>
+						<div class="uk-modal-header">
+							<h3>Confirm deactivation</h3>
+						</div>
+						<div class="uk-modal-body">
+							<p>Confirm deactivation of <strong>{{$user->full_name}}</strong>'s account?</p>
+						</div>
+						<div class="uk-modal-footer">
+							<button class="uk-button" onClick="confirmDelete({{$user->id}})"><i uk-icon="icon:check"></i></button>
+							<button class="uk-button uk-modal-close"><i uk-icon="icon:close"></i></button>
+						</div>
+					</div>
+				</div>
 				@if(Auth::User()->level_id == 3)
 				<div class="uk-modal-full" id="edit-modal-{{ $user->id }}" uk-modal>
 					<div class="uk-modal-dialog">
@@ -61,37 +78,37 @@
 
 									<label for="firstname" class="uk-form-label">First name</label>
 									<div class="uk-form-controls">
-										<input type="text" id="firstname" name="firstname" class="uk-input" value="{{ $user->firstname }}" autofocus></input>
+										<input type="text" id="firstname-{{$user->id}}" name="firstname" class="uk-input" value="{{ $user->firstname }}" autofocus></input>
 									</div>
 									<label for="middlename" class="uk-form-label">Middle name</label>
 									<div class="uk-form-controls">
-										<input type="text" id="middlename" name="middlename" class="uk-input" value="{{ $user->middlename }}"></input>
+										<input type="text" id="middlename-{{$user->id}}" name="middlename" class="uk-input" value="{{ $user->middlename }}"></input>
 									</div>
 									<label for="lastname" class="uk-form-label">Latst name</label>
 									<div class="uk-form-controls">
-										<input type="text" id="lastname" name="lastname" class="uk-input" value="{{ $user->lastname }}"></input>
+										<input type="text" id="lastname-{{$user->id}}" name="lastname" class="uk-input" value="{{ $user->lastname }}"></input>
 									</div>
 									<div class="uk-flex">
 										<div>
-											<label for="dob" class="uk-form-label">Date of Birth</label>
+											<label for="contact" class="uk-form-label">Contact Information</label>
 											<div class="uk-form-controls">
-												<input type="text" id="dob" name="dob" class="uk-input date" value="{{ $user->dob }}"></input>
+												<input type="tel" pattern="[0-9]{11}" id="contact-{{$user->id}}" name="contact" class="uk-input" value="{{ $user->contact }}"></input>
 											</div>
 										</div>
 										<div>
-											<label for="contact" class="uk-form-label">Contact Information</label>
+											<label for="dob" class="uk-form-label">Date of Birth</label>
 											<div class="uk-form-controls">
-												<input type="tel" pattern="[0-9]{11}" id="contact" name="contact" class="uk-input" value="{{ $user->contact }}"></input>
+												<input type="text" id="dob-{{$user->id}}" name="dob" class="uk-input date" value="{{ $user->dob->format('Y-m-d') }}"></input>
 											</div>
 										</div>
 									</div>
 									<label for="email" class="uk-form-label">Email</label>
 									<div class="uk-form-controls">
-										<input type="email" id="email" name="email" class="uk-input" value="{{ $user->email }}"></input>
+										<input type="email" id="email" name="email" class="uk-input uk-disabled" value="{{ $user->email }}" disabled></input>
 									</div>
 									<label for="batch" class="uk-form-label">Batch</label>
 									<div class="uk-form-controls">
-										<select id="batch" class="uk-select" name="batch">
+										<select id="batch" class="uk-select uk-disabled" name="batch" disabled>
 											@foreach(App\Batch::all() as $batch)
 											<option value="{{ $batch->id }}">{{ $batch->batch_name }}</option>
 											@endforeach
@@ -99,7 +116,7 @@
 									</div>
 									<label for="handler" class="uk-form-label">Handler</label>
 									<div class="uk-form-controls">
-										<select id="handler" class="uk-select" name="handler">
+										<select id="handler" class="uk-select uk-diabled" name="handler" disabled>
 											@foreach(App\User::whereLevel_id(3)->get() as $manager)
 											<option value="{{ $manager->id }}">{{ $manager->firstname." ".$manager->middlename." ".$manager->lastname }}</option>
 											@endforeach
@@ -120,6 +137,7 @@
 		</table>
 	</div>
 </div>
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#search').on('keyup', function () {
@@ -158,7 +176,7 @@
 				lastname : lastname,
 				contact : contact,
 				dob : dob,
-				method : "PATCH", 
+				_method : "PATCH", 
 				_token : "{{ csrf_token() }}",
 			},
 			success : function(data){
@@ -174,6 +192,29 @@
 			}
 		});
 	}
+
+	function confirmDelete(id){
+		$.ajax({
+			url : '/admin/confirmDeact-'+id,
+			type : 'DELETE',
+			data : {
+				_method : 'DELETE',
+				_token : '{{ csrf_token() }}',
+			},
+			success : function(data){
+				if(data){
+					window.location.reload();
+				sessionStorage.reloadAfterPageLoad = true;
+				}
+			},
+			error : function(data){
+				$.each(data.responseJSON.errors, function(key,value){
+					UIkit.notification({message : value, status : 'danger'});
+				});
+			}
+		});
+	}
+
 	$( function () {
 		if ( sessionStorage.reloadAfterPageLoad ) {
 			UIkit.notification({message : 'Success.', status : 'success'});

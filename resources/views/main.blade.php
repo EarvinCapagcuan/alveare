@@ -18,7 +18,7 @@
 				@elseif(Auth::User()->level_id == 2)
 				<a href="/admin/users/2" class="uk-button uk-button-text uk-card-title">Students</a>&nbsp;
 				@else
-				<a href="/profile">{{ ucwords(Auth::User()->firstname) }}</a>
+				<a href="/profile" class="uk-button uk-button-text uk-card-title">{{ ucwords(Auth::User()->firstname) }}</a>
 				@endif
 
 			</div>
@@ -67,7 +67,7 @@
 		</div>
 	</div>
 	@endif
-	<div class="col-7 uk-width-2-3 p-0">
+	<div class="col-7 uk-width-2-3 p-0 m-auto">
 		<div class="row">
 			<div class="col mb-4">
 				<div class="uk-card uk-card-small uk-card-default">
@@ -86,6 +86,7 @@
 							<div class="uk-comment-body">
 								{{ $notice->content }}
 							</div>
+							<small><em>Posted by: {{ $user->full_name }},&nbsp;{{ $notice->created_at->diffForHumans() }}</em></small>
 						</article>
 						@endforeach
 					</div>
@@ -100,17 +101,19 @@
 					</div>
 					<div class="uk-card-body">
 						@foreach($projects as $key => $project)
-							@if($key == 2)
-								@break
-							@endif
-							<article class="uk-comment">
-								<header class="uk-comment-header">
-									<h4 class="uk-comment-title">{{ $project->project_name }}</h4>
-								</header>
-								<div class="uk-comment-body">
-									{{ $project->project_req }}
-								</div>
-							</article>
+						@if($key == 2)
+						@break
+						@endif
+						<article class="uk-comment">
+							<header class="uk-comment-header">
+								<h3 class="uk-comment-title"><small>Project title: </small>{{ $project->project_name }}</h3>
+							</header>
+							<div class="uk-comment-body uk-flex uk-flex-between">
+								<span><strong>Project requirements: </strong>{{ $project->project_req }}</span>
+								<span><em>Deadline: </em>{{ $project->deadline }}</span>
+							</div>
+							<hr>
+						</article>
 						@endforeach
 					</div>
 				</div>

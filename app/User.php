@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
@@ -30,6 +31,7 @@ class User extends Authenticatable
             'last_login_ip',
             'user_id', 
         ];
+        use SoftDeletes;
 
     /**
      * The attributes that should be hidden for arrays.
@@ -43,6 +45,7 @@ class User extends Authenticatable
     protected $dates = [
         'created_at',
         'updated_at',
+        'deleted_at',
         'last_login_at',
         'dob',
         ];
@@ -52,11 +55,7 @@ class User extends Authenticatable
     }
 
     public function project(){
-        return $this->belongsToMany('App\Project')->withTimestamps();
-    }
-
-    public function projectUser(){
-        return $this->belongsToMany('App\ProjectUser');
+        return $this->belongToMany('App\Project', 'project_users');
     }
 
     public function senior(){

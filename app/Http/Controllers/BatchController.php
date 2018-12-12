@@ -9,20 +9,15 @@ use App\User;
 
 class BatchController extends Controller
 {
-
-
 	public function startBatch(){
-		$batches = Batch::all();
+		$batches = Batch::latest()->get();
 		$users = User::all();
-
 		return view('batch-list', compact('batches', 'users'));
 	}
 
 	public function create(Request $request){
 		$this->validate(request(), [
-			'batchName' => array('required',
-							'regex:/(January|February|March|April|May|June|July|August|September|October|November|December)[-](Morning|Evening)[-][0-9]{4}/',
-							'unique:Batches,batch_name'),
+			'batchName' => 'required|unique',
 			'slots' => 'required|integer|min:30|max:45',
 		]);
 

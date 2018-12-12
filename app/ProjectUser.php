@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectUser extends Model
 {
     public function project(){
-    	return $this->belongsTo('App\Project');
+    	return $this->hasOne('App\Project', 'project_users');
     }
-    public function userProject(){
-    	return $this->belongsToMany('App\User');
-    }
+
 }
