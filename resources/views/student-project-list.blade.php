@@ -9,6 +9,11 @@
 	</div>
 </div>
 <div class="row">
+	@if (count($projects)<1)
+		<div class="col">
+			<h4>No data.</h4>
+		</div>
+	@else
 	@foreach($projects as $project)
 	@php
 		$x = json_decode($project->user, true);
@@ -38,6 +43,7 @@
 		</div>
 	</div>
 	@endforeach
+	@endif
 </div>
 	<div class="row">
 		<span class="uk-text-center m-auto">

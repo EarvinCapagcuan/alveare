@@ -60,9 +60,6 @@
 					<div class="uk-article-meta">
 						Added {{ $user->created_at->diffForHumans() }}
 					</div>
-					<span>
-						<a href="/{{ $user->level->name }}-{{ $user->id }}" class="uk-button uk-button-text">Check {{ $user->level->name }} account</a>
-					</span>
 				</article>
 				@endforeach
 				@endif

@@ -50,7 +50,7 @@
             <div class="col-lg-2 bg-light uk-grid-item-match" id="sidenav">
                 @include('layouts/sidenav')
             </div>
-            <div class="col mr-0" id="main-content">
+            <div class="col mr-0" id="main-content" style="min-height: 70vh;">
                 @yield('content')
             </div>
         </div>
