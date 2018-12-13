@@ -42,13 +42,15 @@
 </div>
 <div class="row p-3 uk-flex-between">
 	@if(Auth::User()->level_id != 1)
-		@if(!empty($users))
 	<div class="col-4 uk-width-1-4 p-0">
 		<div class="uk-card uk-card-small uk-card-default">
 			<div class="uk-card-header">
 				<h3 class="uk-card-title"><i uk-icon="icon:history"></i>&nbsp;Recently added</h3>
 			</div>
 			<div class="uk-card-body">
+				@if(count($users)<1)
+				<div><strong>No data yet.</strong></div>
+				@else
 				@foreach( $users as $key => $user )
 					@if( $key == 3)
 					@break
@@ -63,13 +65,10 @@
 					</span>
 				</article>
 				@endforeach
+				@endif
 			</div>
 		</div>
 	</div>
-	@else{
-	No data.
-}
-@endif
 	@endif
 	<div class="col-7 uk-width-2-3 p-0 m-auto">
 		<div class="row">
@@ -79,7 +78,9 @@
 						<h3 class="uk-card-title"><i uk-icon="icon:info"></i>&nbsp;Recent announcements</h3>
 					</div>
 					<div class="uk-card-body">
-						@if(!empty($notices))
+						@if(count($notices)<1)
+						<div><strong>No data yet.</strong></div>
+						@else
 						@foreach($notices as $key => $notice)
 							@if($key == 2)
 								@break
@@ -91,11 +92,9 @@
 							<div class="uk-comment-body">
 								{{ $notice->content }}
 							</div>
-							<small><em>Posted by: {{ $user->full_name }},&nbsp;{{ $notice->created_at->diffForHumans() }}</em></small>
+							<small><em>Posted by: {{ $notice->instructor->full_name }},&nbsp;{{ $notice->created_at->diffForHumans() }}</em></small>
 						</article>
 						@endforeach
-						@else
-						No data yet.
 						@endif
 					</div>
 				</div>
@@ -108,7 +107,9 @@
 						<h3 class="uk-card-title"><i class="far fa-calendar-alt"></i>&nbsp;Recent Projects</h3>
 					</div>
 					<div class="uk-card-body">
-						@if($notices != '[]')
+						@if(count($notices)<1)
+						<div><strong>No data yet.</strong></div>
+						@else
 						@foreach($projects as $key => $project)
 						@if($key == 2)
 						@break
@@ -124,8 +125,6 @@
 							<hr>
 						</article>
 						@endforeach
-						@else
-						No data yet.
 						@endif
 					</div>
 				</div>

@@ -14,7 +14,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col">
+		<div class="col-8 offset-2">
 			<table class="uk-table uk-table-striped">
 				<thead>
 					<th>Batch Name</th>
@@ -101,6 +101,7 @@
 				</div>
 				<div class="uk-modal-footer">
 					<button class="uk-button" type="button" onClick="addBatch()">Save</button>
+					<button class="uk-button uk-modal-close">Close</button>
 				</div>
 			</form>
 		</div>

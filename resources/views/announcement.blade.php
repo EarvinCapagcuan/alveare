@@ -15,7 +15,7 @@
 	</div>
 	<div class="row">
 		<div class="col">
-			@if(!empty($notices))
+			@if(count($notices)>0)
 					@foreach($notices as $notice)
 					<div class="uk-card-default uk-card-small m-3">
 						<div class="uk-card-header">
@@ -63,7 +63,9 @@
 					@endif
 				@endforeach
 			@else
-			No Data.
+			<div class="col">
+				<h4>No Data.</h4>
+			</div>
 			@endif
 		</div>
 	</div>

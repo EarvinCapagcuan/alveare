@@ -141,7 +141,7 @@ class ProjectController extends Controller
 
     public function projectsStudent($batch){
         $stat = [1, 2];
-        $projects = Project::whereBatch_id($batch)->whereIn('status_id', $stat)->get();
+        $projects = Project::whereBatch_id($batch)->whereIn('status_id', $stat)->paginate(5);
 /*        foreach($projects as $project){
             $proj = ProjectUser::whereProject_id($project->id)->whereUser_id(Auth::User()->id)->get();
         }*/

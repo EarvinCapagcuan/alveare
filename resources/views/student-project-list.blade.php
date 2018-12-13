@@ -39,5 +39,10 @@
 	</div>
 	@endforeach
 </div>
+	<div class="row">
+		<span class="uk-text-center m-auto">
+			{{ $projects->links() }}
+		</span>
+	</div>
 
 @endsection

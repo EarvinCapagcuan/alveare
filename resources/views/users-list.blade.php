@@ -6,6 +6,7 @@
 <div class="row">
 	<div class="col">
 		<h3>User List</h3><h4>
+		@if(Auth::User()->level_id == 3 )
 		<div>
 			<span><small>View</small> <a href="#deactivated-list" class="uk-button uk-button-text" uk-toggle>deactivated accounts</a></span>
 		</div>
@@ -39,6 +40,7 @@
 				</div>
 			</div>
 		</div>
+		@endif
 	</div>
 </div>
 <div class="row">
@@ -51,7 +53,7 @@
 	</div>
 </div>
 	<div>
-		<table border="1" class="uk-table uk-table-striped">
+		<table class="uk-table uk-table-striped">
 			<thead>
 				<th>Name</th>
 				<th>Email</th>
@@ -67,6 +69,9 @@
 				</tr>
 			</tfoot>
 			<tbody class="result">
+				@if(count($users) < 1)
+				<tr><td colspan="{{ Auth::User()->level_id == 3 ? 5 : 4 }}" align="center"><strong>No data yet.</strong></td></tr>
+				@else
 				@foreach($users as $user)
 				<tr>
 					<td>{{ ucwords($user->full_name) }}</td>
@@ -74,7 +79,7 @@
 					<td>{{ $user->contact }}</td>
 					<td>{{ $user->batch->batch_name}}</td>
 					@if(Auth::User()->level_id == 3)
-					<td>
+					<td class="uk-flex">
 						<a href="#edit-modal-{{ $user->id }}" class="uk-button uk-button-secondary" uk-tooltip="title: Edit" uk-toggle><i uk-icon="icon:file-edit"></i></a>&nbsp;
 						<a href="#deact-{{ $user->id }}" class="uk-button uk-button-secondary" uk-tooltip="title: Deactivate" uk-toggle><i uk-icon="icon:ban"></i></a>
 					</td>
@@ -166,6 +171,7 @@
 				</div>
 				@endif
 				@endforeach
+				@endif
 			</tbody>
 		</table>
 	</div>
